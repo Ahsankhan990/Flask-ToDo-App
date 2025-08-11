@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Task Page</title>
+    <link rel="stylesheet" href="/static/tasksStyle.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <h2>Welcome, {{ session['username'] }}</h2>
+            <p class="date-display">{{ current_day }}, {{ current_date }}</p>
+        </div>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for category, msg in messages %}
+                <div class="flash-message {{ category }}">
+                  {{ msg }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="task-header">
+            <h3>Your Tasks</h3>
+        </div>
+
+    
+        <form method="POST" action="/tasks" class="add-task-form">
+            <input type="text" name="task_name" placeholder="Enter new task" required>
+            <button type="submit" class="add-btn" name="action" value="add">+ Add Task</button>
+          
+        </form>
+
+        <div class="task-list">
+            {% for task in tasks %}
+            <div class="task-item">
+                <span class="task-name">{{ task.name }}</span>
+
+                <div class="action-buttons">
+                    <form method="POST" action="/edit/{{ task.id }}">
+                        <button type="submit" class="edit-btn" name="action" value="edit">Edit</button>
+                    </form>
+                    <form method="POST" action="/delete/{{ task.id }}">
+                        <button type="submit" class="delete-btn" name="action" value="delete">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
